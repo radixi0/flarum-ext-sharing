@@ -27,7 +27,7 @@ export default class SharingMenu extends Dropdown {
 
     this.enabledNetworks = this.props.enabledNetworks;
     this.discussion = this.props.discussion;
-    var share_url = encodeURIComponent(app.forum.attribute('baseUrl')) + '/d/' + this.discussion.id();
+    var share_url = encodeURIComponent(app.forum.attribute('baseUrl') + '/d/' + this.discussion.id() + '-' + this.discussion.slug());
     var share_title = encodeURIComponent(app.title);
     var share_description = this.discussion.startPost() ? encodeURIComponent(truncate(getPlainContent(this.discussion.startPost().contentHtml()), 150, 0)) : '';
     const width = 1000;
@@ -35,7 +35,6 @@ export default class SharingMenu extends Dropdown {
     const top = $(window).height() / 2 - height / 2;
     const left = $(window).width() / 2 - width / 2;
     const window_params = 'width=' + width + ', height= ' + height + ', top=' + top + ', left=' + left + ', status=no, scrollbars=no, resizable=no';
-    var urlShare = '';
 
     let buttonLabel = app.translator.trans('radixio-sharing.forum.share_button');
     const buttonClass = 'ButtonGroup Dropdown';
@@ -61,9 +60,9 @@ export default class SharingMenu extends Dropdown {
                   case 'facebook':                    
                     props.onclick = function () {
                       FB.ui({
-                        method: 'feed',
-                        link: share_url,
-                        caption: share_title,
+                        method: 'share',
+                        href: 'www.karateka.com.br/d/97-um-pouco-sobre-o-shitoryu'
+                        //caption: share_title,
                       }, function(response){});
                     };
                     break;

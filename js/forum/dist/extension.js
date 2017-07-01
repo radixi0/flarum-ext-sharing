@@ -166,7 +166,7 @@ System.register('radixi0/sharing/components/SharingMenu', ['flarum/components/Dr
 
             this.enabledNetworks = this.props.enabledNetworks;
             this.discussion = this.props.discussion;
-            var share_url = encodeURIComponent(app.forum.attribute('baseUrl')) + '/d/' + this.discussion.id();
+            var share_url = encodeURIComponent(app.forum.attribute('baseUrl') + '/d/' + this.discussion.id() + '-' + this.discussion.slug());
             var share_title = encodeURIComponent(app.title);
             var share_description = this.discussion.startPost() ? encodeURIComponent(truncate(getPlainContent(this.discussion.startPost().contentHtml()), 150, 0)) : '';
             var width = 1000;
@@ -174,7 +174,6 @@ System.register('radixi0/sharing/components/SharingMenu', ['flarum/components/Dr
             var top = $(window).height() / 2 - height / 2;
             var left = $(window).width() / 2 - width / 2;
             var window_params = 'width=' + width + ', height= ' + height + ', top=' + top + ', left=' + left + ', status=no, scrollbars=no, resizable=no';
-            var urlShare = '';
 
             var buttonLabel = app.translator.trans('radixio-sharing.forum.share_button');
             var buttonClass = 'ButtonGroup Dropdown';
@@ -201,9 +200,9 @@ System.register('radixi0/sharing/components/SharingMenu', ['flarum/components/Dr
                     case 'facebook':
                       props.onclick = function () {
                         FB.ui({
-                          method: 'feed',
-                          link: share_url,
-                          caption: share_title
+                          method: 'share',
+                          href: 'www.karateka.com.br/d/97-um-pouco-sobre-o-shitoryu'
+                          //caption: share_title,
                         }, function (response) {});
                       };
                       break;
