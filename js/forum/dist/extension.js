@@ -180,7 +180,7 @@ System.register('radixi0/sharing/components/SharingMenu', ['flarum/components/Dr
             var buttonProps = {
               className: 'Button ' + buttonClass,
               children: buttonLabel,
-              title: 'Sharing options'
+              title: ''
             };
 
             return m(
@@ -201,8 +201,7 @@ System.register('radixi0/sharing/components/SharingMenu', ['flarum/components/Dr
                       props.onclick = function () {
                         FB.ui({
                           method: 'share',
-                          href: 'www.karateka.com.br/d/97-um-pouco-sobre-o-shitoryu'
-                          //caption: share_title,
+                          href: share_url
                         }, function (response) {});
                       };
                       break;

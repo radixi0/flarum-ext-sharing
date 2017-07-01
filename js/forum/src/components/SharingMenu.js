@@ -41,7 +41,7 @@ export default class SharingMenu extends Dropdown {
     const buttonProps = {
       className: 'Button ' + buttonClass,
       children: buttonLabel,
-      title: 'Sharing options'
+      title: ''
     };
 
     return (
@@ -61,8 +61,7 @@ export default class SharingMenu extends Dropdown {
                     props.onclick = function () {
                       FB.ui({
                         method: 'share',
-                        href: 'www.karateka.com.br/d/97-um-pouco-sobre-o-shitoryu'
-                        //caption: share_title,
+                        href: share_url
                       }, function(response){});
                     };
                     break;

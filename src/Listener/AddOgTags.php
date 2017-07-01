@@ -73,7 +73,7 @@ class AddOgTags
      */
     public function addMetaTags(PrepareApiData $event)
     {
-        if ($this->clientView && ($this->openGraph || $this->twitterCard)) {
+        if ($this->clientView) {
             $data = [];
 
             switch (true) {
