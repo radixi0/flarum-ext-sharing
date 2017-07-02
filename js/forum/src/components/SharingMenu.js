@@ -27,7 +27,7 @@ export default class SharingMenu extends Dropdown {
 
     this.enabledNetworks = this.props.enabledNetworks;
     this.discussion = this.props.discussion;
-    var share_url = encodeURIComponent(app.forum.attribute('baseUrl') + '/d/' + this.discussion.id() + '-' + this.discussion.slug());
+    var share_url = app.forum.attribute('baseUrl') + '/d/' + this.discussion.id() + '-' + this.discussion.slug();
     var share_title = encodeURIComponent(app.title);
     var share_description = this.discussion.startPost() ? encodeURIComponent(truncate(getPlainContent(this.discussion.startPost().contentHtml()), 150, 0)) : '';
     const width = 1000;
