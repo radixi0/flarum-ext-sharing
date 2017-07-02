@@ -89,6 +89,7 @@ class AddOgTags
             $pattern = '/!\[(.*)\]\s?\((.*)(.png|.gif|.jpg|.jpeg)(.*)\)/';
 
             if ($post_id === null) { 
+                echo('X1');
                 $data['description'] = $this->ogData->startPost ? $this->plainText(preg_replace($pattern, '', $this->ogData->startPost->content), 150) : '';
                 
                 if(preg_match($pattern,$this->ogData->startPost->content, $matches))
@@ -97,12 +98,13 @@ class AddOgTags
                 }
 
             } else {
+                echo('X2');
                 $post = array_key_exists((int)$post_id - 1, $this->ogData->posts) ? $this->ogData->posts[(int)$post_id - 1] : null;
                 $data['url'] .= '/' . $post_id;
                 if ($post) {
                     $data['description'] = $this->plainText(preg_replace($pattern, '', $post->content), 150);                    
                 } else {
-                    $data['description'] = $this->ogData->startPost ? $this->plainText($this->ogData->startPost->content, 150) : '';
+                    $data['description'] = $this->ogData->startPost ? $this->plainText(preg_replace($pattern, '',$this->ogData->startPost->content), 150) : '';
                 }
             }
 
