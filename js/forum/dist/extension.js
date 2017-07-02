@@ -7,7 +7,7 @@ System.register('radixi0/sharing/addSharingMenu', ['flarum/extend', 'flarum/comp
   function addSharingMenu() {
     extend(DiscussionControls, 'userControls', function (items, discussion, context) {
       if (!context instanceof DiscussionPage) {
-        //items.add('sharing', Button.component());      
+        items.add('sharing', Button.component());
       }
     });
 

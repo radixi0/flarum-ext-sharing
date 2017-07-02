@@ -8,7 +8,7 @@ import SharingMenu from 'radixi0/sharing/components/SharingMenu';
 export default function addSharingMenu() {
   extend(DiscussionControls, 'userControls', function(items, discussion, context) {
     if (!context instanceof DiscussionPage) {              
-        //items.add('sharing', Button.component());      
+        items.add('sharing', Button.component());      
     }
   });
 
