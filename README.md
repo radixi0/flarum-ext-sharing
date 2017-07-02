@@ -23,7 +23,7 @@ Based on the work of the developers:
 ### Installation
 
 ```bash
-composer require avatar4eg/flarum-ext-share-social
+composer require radixi0/flarum-ext-sharing
 ```
 
 ### Configuration
