@@ -86,22 +86,21 @@ class AddOgTags
             $data['url'] = $this->urlGenerator->toRoute('discussion', ['id' => $this->ogData->id . '-' . $this->ogData->slug]);   
             $data['title'] = $this->plainText($this->ogData->title, 80);
             $post_id = $event->request->getQueryParams()['page']['near'];
-            if ($post_id === null) { 
-                
-                $pattern = '/!\[(.*)\]\s?\((.*)(.png|.gif|.jpg|.jpeg)(.*)\)/';
+            $pattern = '/!\[(.*)\]\s?\((.*)(.png|.gif|.jpg|.jpeg)(.*)\)/';
 
+            if ($post_id === null) { 
                 $data['description'] = $this->ogData->startPost ? $this->plainText(preg_replace($pattern, '', $this->ogData->startPost->content), 150) : '';
                 
                 if(preg_match($pattern,$this->ogData->startPost->content, $matches))
                 {
-                    $data['image'] = $matches[2] . $matches[3];                     
+                    $data['image'] = $matches[2] . $matches[3];
                 }
 
             } else {
                 $post = array_key_exists((int)$post_id - 1, $this->ogData->posts) ? $this->ogData->posts[(int)$post_id - 1] : null;
                 $data['url'] .= '/' . $post_id;
                 if ($post) {
-                    $data['description'] = $this->plainText($post->content, 150);
+                    $data['description'] = $this->plainText(preg_replace($pattern, '', $post->content), 150);                    
                 } else {
                     $data['description'] = $this->ogData->startPost ? $this->plainText($this->ogData->startPost->content, 150) : '';
                 }
