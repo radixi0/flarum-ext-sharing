@@ -1,82 +1,5 @@
 'use strict';
 
-System.register('radixi0/sharing/addMetaTags', ['flarum/app', 'flarum/components/DiscussionPage', 'flarum/extend', 'flarum/utils/string'], function (_export, _context) {
-    "use strict";
-
-    var app, DiscussionPage, extend, truncate, getPlainContent;
-
-    _export('default', function () {
-        extend(DiscussionPage.prototype, 'show', function () {
-
-            var title = this.discussion.title();
-            var url = app.forum.attribute('baseUrl') + '/d/' + this.discussion.id();
-            var description = '';
-
-            if (this.discussion.startPost()) {
-                description = truncate(getPlainContent(this.discussion.startPost().contentHtml()), 150, 0).replace(/\s+/, ' ').trim();
-            }
-
-            $('meta[property=description]').attr('content', description);
-            $('meta[property=og\\:title]').attr('content', title);
-            $('meta[property=og\\:url]').attr('content', url);
-            $('meta[property=og\\:description]').attr('content', description);
-            $('meta[property=twitter\\:title]').attr('content', title);
-            $('meta[property=twitter\\:url]').attr('content', url);
-            $('meta[property=twitter\\:description]').attr('content', description);
-
-            if (this.discussion.startPost()) {
-                description = truncate(getPlainContent(this.discussion.startPost().contentHtml()), 150, 0).replace(/\s+/, ' ').trim();
-            }
-
-            $('meta[property=description]').attr('content', description);
-            $('meta[property=og\\:title]').attr('content', title);
-            $('meta[property=og\\:url]').attr('content', url);
-            $('meta[property=og\\:description]').attr('content', description);
-
-            $('meta[property=twitter\\:title]').attr('content', title);
-            $('meta[property=twitter\\:url]').attr('content', url);
-            $('meta[property=twitter\\:description]').attr('content', description);
-        });
-
-        extend(DiscussionPage.prototype, 'onunload', function () {
-            if (this.discussion) {
-                var idParam = m.route.param('id');
-
-                if (!idParam || idParam && idParam.split('-')[0] !== this.discussion.id()) {
-
-                    var title = app.forum.attribute('welcomeTitle');
-                    var url = app.forum.attribute('baseUrl');
-                    var description = app.forum.attribute('description');
-
-                    $('meta[property=description]').attr('content', description);
-                    $('meta[property=og\\:title]').attr('content', title);
-                    $('meta[property=og\\:url]').attr('content', url);
-                    $('meta[property=og\\:description]').attr('content', description);
-
-                    $('meta[property=twitter\\:title]').attr('content', title);
-                    $('meta[property=twitter\\:url]').attr('content', url);
-                    $('meta[property=twitter\\:description]').attr('content', description);
-                }
-            }
-        });
-    });
-
-    return {
-        setters: [function (_flarumApp) {
-            app = _flarumApp.default;
-        }, function (_flarumComponentsDiscussionPage) {
-            DiscussionPage = _flarumComponentsDiscussionPage.default;
-        }, function (_flarumExtend) {
-            extend = _flarumExtend.extend;
-        }, function (_flarumUtilsString) {
-            truncate = _flarumUtilsString.truncate;
-            getPlainContent = _flarumUtilsString.getPlainContent;
-        }],
-        execute: function () {}
-    };
-});;
-'use strict';
-
 System.register('radixi0/sharing/addSharingMenu', ['flarum/extend', 'flarum/components/Button', 'flarum/components/DiscussionPage', 'flarum/utils/DiscussionControls', 'radixi0/sharing/components/SharingMenu'], function (_export, _context) {
   "use strict";
 
@@ -84,7 +7,7 @@ System.register('radixi0/sharing/addSharingMenu', ['flarum/extend', 'flarum/comp
   function addSharingMenu() {
     extend(DiscussionControls, 'userControls', function (items, discussion, context) {
       if (!context instanceof DiscussionPage) {
-        items.add('sharing', Button.component());
+        //items.add('sharing', Button.component());      
       }
     });
 
@@ -92,7 +15,9 @@ System.register('radixi0/sharing/addSharingMenu', ['flarum/extend', 'flarum/comp
       var discussion = this.discussion;
       var enabledNetworks = app.forum.attribute('enabledNetworks') ? JSON.parse(app.forum.attribute('enabledNetworks')) : [];
 
-      items.add('sharing', SharingMenu.component({ discussion: discussion, enabledNetworks: enabledNetworks }));
+      if (enabledNetworks.length > 0) {
+        items.add('sharing', SharingMenu.component({ discussion: discussion, enabledNetworks: enabledNetworks }));
+      }
     });
   }
 
@@ -299,7 +224,6 @@ System.register('radixi0/sharing/main', ['flarum/components/DiscussionPage', 'fl
         execute: function () {
 
             app.initializers.add('flarum-ext-sharing', function () {
-                addMetaTags();
                 addSharingMenu();
             });
         }

@@ -7,6 +7,5 @@ import addMetaTags from 'radixi0/sharing/addMetaTags';
 import addSharingMenu from 'radixi0/sharing/addSharingMenu';
 
 app.initializers.add('flarum-ext-sharing', function() {    
-    addMetaTags();
     addSharingMenu();
 });
