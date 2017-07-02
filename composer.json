@@ -12,7 +12,12 @@
     },
     "extra": {
         "flarum-extension": {
-            "title": "Flarum Sharing"
+            "title": "Flarum Sharing",
+            "icon": {
+                "name": "retweet",
+                "backgroundColor": "#489fdf",
+                "color": "#fff"
+            }
         }
     }
 }
