@@ -167,7 +167,7 @@ System.register('radixi0/sharing/components/SharingMenu', ['flarum/components/Dr
             this.enabledNetworks = this.props.enabledNetworks;
             this.discussion = this.props.discussion;
             var share_url = app.forum.attribute('baseUrl') + '/d/' + this.discussion.id() + '-' + this.discussion.slug();
-            var share_title = encodeURIComponent(app.title);
+            var share_title = app.title;
             var share_description = this.discussion.startPost() ? encodeURIComponent(truncate(getPlainContent(this.discussion.startPost().contentHtml()), 150, 0)) : '';
             var width = 1000;
             var height = 500;

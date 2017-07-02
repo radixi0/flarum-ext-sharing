@@ -62,12 +62,14 @@ class AddOgTags
             $data['description'] = $this->plainText($this->settings->get('forum_description'), 150);
 
             $this->addOpenGraph([
-                'type' => 'website',
-                'site_name' => $this->settings->get('forum_title')
+                'type' => 'article',
+                'site_name' => $this->settings->get('forum_title'),
+                'image' => 'http://www.karateka.com.br/assets/logo-vutwfgia.png'
             ]);
             $this->addOpenGraph($data);
             $this->addTwitterCard([
-                'card' => 'summary'
+                'card' => 'summary',
+                'image' => 'http://www.karateka.com.br/assets/logo-vutwfgia.png'
             ]);
             $this->addTwitterCard($data);
             $this->addFacebookApi();                        
@@ -80,7 +82,7 @@ class AddOgTags
     public function addMetaTags(PrepareApiData $event)
     {
         if ($this->clientView){
-            //echo("passei" . $this->ogData);
+
             $data = [];
             echo($this->plainText($event->data->title));
             $data['url'] = $this->urlGenerator->toRoute('discussion', ['id' => $this->ogData->id . '-' . $this->ogData->slug]);   
@@ -88,22 +90,14 @@ class AddOgTags
             $post_id = $event->request->getQueryParams()['page']['near'];
             if ($post_id === null) {
                 $data['description'] = $this->ogData->startPost ? $this->plainText($this->ogData->startPost->content, 150) : '';
-                if(preg_match('/!\[image (.*?)]/',$this->ogData->startPost->content, $matches))
+                //echo($data['description']);
+                if(preg_match('/!\[(.*)\]\s?\((.*)(.png|.gif|.jpg|.jpeg)(.*)\)/',$this->ogData->startPost->content, $matches))
                 {
-                    $data['image'] = $matches[1]; 
+                    $data['image'] = $matches[0];                     
                 }
                 else if(preg_match('/\[media\](.*?)\[\/media\]/', $this->ogData->startPost->content,$matches))
                 {
-                    $data['image'] = $matches[1];
-                }
-
-                if(preg_match('/!\[image (.*?)]/',$post->content,$matches))
-                {
-                    $data['image'] = $matches[1];
-                }
-                else if(preg_match('/!\[image (.*?)]/',$event->data->startPost->content,$matches))
-                {
-                    $data['image'] = $matches[1]; 
+                    $data['image'] = $matches[1];                    
                 }
                 
             } else {
