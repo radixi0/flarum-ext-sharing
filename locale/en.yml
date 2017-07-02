@@ -7,6 +7,9 @@ radixio-sharing:
     labels:
       preferences:
         title: Select the social networks you want to enable
+      facebook:
+        title: Facebook configuration
+        client_id: Set your facebook app ID (required)
     
     buttons:
       save: Save

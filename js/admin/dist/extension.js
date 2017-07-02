@@ -74,7 +74,7 @@ System.register("radixi0/sharing/components/SharingConfigPage", ["flarum/Compone
                         this.loading = false;
 
                         // the fields we need to watch and to save
-                        this.fields = ['facebook', 'twitter'];
+                        this.fields = ['facebook', 'twitter', 'facebookAppId'];
 
                         // the checkboxes we need to watch and to save.
                         this.checkboxes = ['facebook', 'twitter'];
@@ -97,7 +97,11 @@ System.register("radixi0/sharing/components/SharingConfigPage", ["flarum/Compone
                 }, {
                     key: "view",
                     value: function view() {
-                        return [m('div', { className: 'SharingPage' }, [m('div', { className: 'container' }, [m('form', { onsubmit: this.onsubmit.bind(this) }, [m('fieldset', {}, [m('legend', {}, app.translator.trans('radixio-sharing.admin.labels.preferences.title')), Switch.component({
+                        return [m('div', { className: 'SharingPage' }, [m('div', { className: 'container' }, [m('form', { onsubmit: this.onsubmit.bind(this) }, [m('fieldset', {}, [m('legend', {}, app.translator.trans('radixio-sharing.admin.labels.facebook.title')), m('label', {}, app.translator.trans('radixio-sharing.admin.labels.facebook.client_id')), m('input', {
+                            className: 'FormControl',
+                            value: this.values.facebookAppId() || '',
+                            oninput: m.withAttr('value', this.values.facebookAppId)
+                        })]), m('fieldset', {}, [m('legend', {}, app.translator.trans('radixio-sharing.admin.labels.preferences.title')), Switch.component({
                             state: this.values.facebook() || false,
                             children: 'Facebook',
                             onchange: this.values.facebook

@@ -13,7 +13,8 @@ export default class SharingConfigPage extends Component {
         // the fields we need to watch and to save
         this.fields = [
            'facebook',
-           'twitter'
+           'twitter',
+           'facebookAppId'
         ];
 
         // the checkboxes we need to watch and to save.
@@ -43,6 +44,15 @@ export default class SharingConfigPage extends Component {
             m('div', {className: 'SharingPage'}, [
                 m('div', {className: 'container'}, [
                     m('form', {onsubmit: this.onsubmit.bind(this)}, [                        
+                        m('fieldset', {}, [
+                            m('legend', {}, app.translator.trans('radixio-sharing.admin.labels.facebook.title')),
+                            m('label', {}, app.translator.trans('radixio-sharing.admin.labels.facebook.client_id')),
+                            m('input', {
+                                className: 'FormControl',
+                                value: this.values.facebookAppId() || '',
+                                oninput: m.withAttr('value', this.values.facebookAppId)
+                            }),
+                        ]),
                         m('fieldset', {}, [
                             m('legend', {}, app.translator.trans('radixio-sharing.admin.labels.preferences.title')),
                             Switch.component({

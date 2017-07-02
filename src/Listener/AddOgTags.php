@@ -53,7 +53,6 @@ class AddOgTags
     public function getClientView(ConfigureClientView $event)
     {
         if ($event->isForum()) {
-            //echo("gcv=" . json_encode($this->millitime()));
             $this->clientView = $event->view;
             
             $data = [];
@@ -64,12 +63,12 @@ class AddOgTags
             $this->addOpenGraph([
                 'type' => 'article',
                 'site_name' => $this->settings->get('forum_title'),
-                'image' => 'http://www.karateka.com.br/assets/logo-vutwfgia.png'
+                'image' => ''
             ]);
             $this->addOpenGraph($data);
             $this->addTwitterCard([
                 'card' => 'summary',
-                'image' => 'http://www.karateka.com.br/assets/logo-vutwfgia.png'
+                'image' => ''
             ]);
             $this->addTwitterCard($data);
             $this->addFacebookApi();                        
@@ -84,22 +83,20 @@ class AddOgTags
         if ($this->clientView){
 
             $data = [];
-            echo($this->plainText($event->data->title));
             $data['url'] = $this->urlGenerator->toRoute('discussion', ['id' => $this->ogData->id . '-' . $this->ogData->slug]);   
             $data['title'] = $this->plainText($this->ogData->title, 80);
             $post_id = $event->request->getQueryParams()['page']['near'];
-            if ($post_id === null) {
-                $data['description'] = $this->ogData->startPost ? $this->plainText($this->ogData->startPost->content, 150) : '';
-                //echo($data['description']);
-                if(preg_match('/!\[(.*)\]\s?\((.*)(.png|.gif|.jpg|.jpeg)(.*)\)/',$this->ogData->startPost->content, $matches))
-                {
-                    $data['image'] = $matches[0];                     
-                }
-                else if(preg_match('/\[media\](.*?)\[\/media\]/', $this->ogData->startPost->content,$matches))
-                {
-                    $data['image'] = $matches[1];                    
-                }
+            if ($post_id === null) { 
                 
+                $pattern = '/!\[(.*)\]\s?\((.*)(.png|.gif|.jpg|.jpeg)(.*)\)/';
+
+                $data['description'] = $this->ogData->startPost ? $this->plainText(preg_replace($pattern, '', $this->ogData->startPost->content), 150) : '';
+                
+                if(preg_match($pattern,$this->ogData->startPost->content, $matches))
+                {
+                    $data['image'] = $matches[2] . $matches[3];                     
+                }
+
             } else {
                 $post = array_key_exists((int)$post_id - 1, $this->ogData->posts) ? $this->ogData->posts[(int)$post_id - 1] : null;
                 $data['url'] .= '/' . $post_id;
@@ -109,6 +106,12 @@ class AddOgTags
                     $data['description'] = $this->ogData->startPost ? $this->plainText($this->ogData->startPost->content, 150) : '';
                 }
             }
+
+            // if no images found
+            if ($data['image'] == ''){
+                $data['image'] = $this->urlGenerator->toBase() . '/assets/' . $this->settings->get('logo_path');
+            }
+
             $this->addOpenGraph($data);
             $this->addTwitterCard($data);
         } else {
@@ -136,14 +139,19 @@ class AddOgTags
         }
     }
 
+    /**
+     * @return string
+     */
     public function addFacebookApi() 
     {
         if ($this->clientView)
         {
-            $this->clientView->addHeadString('<script>
+            $this->clientView->addHeadString(str_replace('{0}', 
+                                            $this->settings->get('radixio.sharing.facebookAppId'),
+                                            '<script>
                                                 window.fbAsyncInit = function() {
                                                     FB.init({
-                                                    appId            : \'307661066312655\',
+                                                    appId            : \'{0}\',
                                                     autoLogAppEvents : true,
                                                     xfbml            : true,
                                                     version          : \'v2.9\'
@@ -158,7 +166,7 @@ class AddOgTags
                                                     js.src = "//connect.facebook.net/en_US/sdk.js";
                                                     fjs.parentNode.insertBefore(js, fjs);
                                                 }(document, \'script\', \'facebook-jssdk\'));
-                                            </script>');
+                                            </script>'));
         }
     }
 
