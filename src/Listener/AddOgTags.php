@@ -28,12 +28,17 @@ class AddOgTags
      */
     protected $clientView;
 
+    /**
+     * @var ogData
+     */
+    protected $ogData;
+
     public function __construct(SettingsRepositoryInterface $settings, UrlGenerator $urlGenerator) {
         $this->settings = $settings;
         $this->urlGenerator = $urlGenerator;
     }
 
-    /**
+    /**            
      * @param Dispatcher $events
      */
     public function subscribe(Dispatcher $events)
@@ -48,6 +53,7 @@ class AddOgTags
     public function getClientView(ConfigureClientView $event)
     {
         if ($event->isForum()) {
+            //echo("gcv=" . json_encode($this->millitime()));
             $this->clientView = $event->view;
             
             $data = [];
@@ -73,61 +79,47 @@ class AddOgTags
      */
     public function addMetaTags(PrepareApiData $event)
     {
-        if ($this->clientView) {
+        if ($this->clientView){
+            //echo("passei" . $this->ogData);
             $data = [];
+            echo($this->plainText($event->data->title));
+            $data['url'] = $this->urlGenerator->toRoute('discussion', ['id' => $this->ogData->id . '-' . $this->ogData->slug]);   
+            $data['title'] = $this->plainText($this->ogData->title, 80);
+            $post_id = $event->request->getQueryParams()['page']['near'];
+            if ($post_id === null) {
+                $data['description'] = $this->ogData->startPost ? $this->plainText($this->ogData->startPost->content, 150) : '';
+                if(preg_match('/!\[image (.*?)]/',$this->ogData->startPost->content, $matches))
+                {
+                    $data['image'] = $matches[1]; 
+                }
+                else if(preg_match('/\[media\](.*?)\[\/media\]/', $this->ogData->startPost->content,$matches))
+                {
+                    $data['image'] = $matches[1];
+                }
 
-            switch (true) {
-                case $event->isController(ShowDiscussionController::class):
-                    $data['url'] = $this->urlGenerator->toRoute('discussion', ['id' => $event->data->id . '-' . $event->data->slug]);
-                    $data['title'] = $this->plainText($event->data->title, 80);
-                    $post_id = $event->request->getQueryParams()['page']['near'];
-                    if ($post_id === null) {
-                        $data['description'] = $event->data->startPost ? $this->plainText($event->data->startPost->content, 150) : '';
-						if(preg_match('/!\[image (.*?)]/',$event->data->startPost->content,$matches))
-						{
-							$data['image'] = $matches[1]; 
-						}
-						else if(preg_match('/\[media\](.*?)\[\/media\]/',$event->data->startPost->content,$matches))
-						{
-							$data['image'] = $matches[1];
-						}
-
-                        if(preg_match('/!\[image (.*?)]/',$post->content,$matches))
-						{
-							$data['image'] = $matches[1];
-						}
-						else if(preg_match('/!\[image (.*?)]/',$event->data->startPost->content,$matches))
-						{
-							$data['image'] = $matches[1]; 
-						}
-                        
-                    } else {
-                        $post = array_key_exists((int)$post_id - 1, $event->data->posts) ? $event->data->posts[(int)$post_id - 1] : null;
-                        $data['url'] .= '/' . $post_id;
-                        if ($post) {
-                            $data['description'] = $this->plainText($post->content, 150);
-                        } else {
-                            $data['description'] = $event->data->startPost ? $this->plainText($event->data->startPost->content, 150) : '';
-                        }
-                    }
-                    break;
-//                case $event->isController(ListDiscussionsController::class):
-//                    $data['url'] = $this->urlGenerator->toRoute('user', ['username' => $event->data->username]);
-//                    $data['title'] = $this->plainText($event->data->username, 80);
-//                    $data['description'] = $event->data->bio ? $this->plainText($event->data->bio, 150) : '';
-//                    break;
-//                case $event->isController(ShowUserController::class):
-//                    $data['url'] = $this->urlGenerator->toRoute('user', ['username' => $event->data->username]);
-//                    $data['title'] = $this->plainText($event->data->username, 80);
-//                    $data['description'] = $event->data->bio ? $this->plainText($event->data->bio, 150) : '';
-//                    break;
-                default:
-                    break;
+                if(preg_match('/!\[image (.*?)]/',$post->content,$matches))
+                {
+                    $data['image'] = $matches[1];
+                }
+                else if(preg_match('/!\[image (.*?)]/',$event->data->startPost->content,$matches))
+                {
+                    $data['image'] = $matches[1]; 
+                }
+                
+            } else {
+                $post = array_key_exists((int)$post_id - 1, $this->ogData->posts) ? $this->ogData->posts[(int)$post_id - 1] : null;
+                $data['url'] .= '/' . $post_id;
+                if ($post) {
+                    $data['description'] = $this->plainText($post->content, 150);
+                } else {
+                    $data['description'] = $this->ogData->startPost ? $this->plainText($this->ogData->startPost->content, 150) : '';
+                }
             }
-
             $this->addOpenGraph($data);
-            $this->addTwitterCard($data);            
-        }
+            $this->addTwitterCard($data);
+        } else {
+            $this->ogData = $event->data;
+        }                            
     }
 
     /**

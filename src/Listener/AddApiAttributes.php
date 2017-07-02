@@ -54,7 +54,7 @@ class AddApiAttributes
      */
     public function includeStartPost(ConfigureApiController $event)
     {
-        if ($event->isController(ShowDiscussionController::class)) {
+        if ($event->isController(ShowDiscussionController::class)) {                        
             $event->addInclude('startPost');
         }
     }
