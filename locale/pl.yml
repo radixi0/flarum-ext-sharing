@@ -1,0 +1,36 @@
+radixio-sharing:
+  admin:
+    nav:
+      sharing_button: Udostępnij 
+      sharing_text: Ustaw opcje udostępniania.
+    
+    labels:
+      preferences:
+        title: Wybierz sieci społecznościowe, które chcesz włączyć
+      facebook:
+        title: Konfiguracj Facebook
+        client_id: Ustaw swój identyfikator aplikacji Facebook (wymagane)
+    
+    buttons:
+      save: Zapisz
+  
+  forum:
+    share_button: => radixio-sharing.ref.share
+    modal_title: => radixio-sharingref.share
+    facebook_button: => radixio-sharing.ref.facebook
+    vkontakte_button: => radixio-sharing.ref.vkontakte
+    twitter_button: => radixio-sharing.ref.twitter
+    google_plus_button: => radixio-sharing.ref.google_plus
+    odnoklassniki_button: => radixio-sharing.ref.odnoklassniki
+    my_mail_button: => radixio-sharing.ref.my_mail
+    linkedin_button: => radixio-sharing.ref.linkedin
+
+  ref:
+      facebook: Facebook
+      vkontakte: VKontakte
+      twitter: Twitter
+      google_plus: Google+
+      odnoklassniki: Odnoklassniki
+      my_mail: My World
+      linkedin: LinkedIn
+      share: Share
